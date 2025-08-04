@@ -1,11 +1,32 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
 h1 {
   background-color: yellowgreen;
+  text-align: center;
 }
 
 form {
   background-color: red;
-}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 70%;
 
-.ingredient-wrapper {
-  background-color: aqua;
+  .ingredients-wrapper {
+    background-color: black;
+    padding: 0 400px;
+
+    .ingredient-wrapper {
+      background-color: aqua;
+    }
+  }
+
+  button {
+    align-self: flex-end;
+  }
 }
