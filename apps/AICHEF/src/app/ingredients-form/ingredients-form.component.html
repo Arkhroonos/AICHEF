@@ -1,10 +1,22 @@
 <h1>What do you have in your kitchen today ?</h1>
-<form>
-  <div class="ingredients-wrapper">
-    <div class="ingredient-wrapper">
-      <input name="name" />
-      <input name="quantity" />
-    </div>
+<form [formGroup]="ingredientForm">
+  <div class="ingredients-wrapper" formArrayName="ingredients">
+    @for (ingredient of ingredients.controls; track $index; let i = $index) {
+      <div class="ingredient-wrapper" [formGroupName]="i">
+        <input formControlName="ingredient" name="name" />
+        <input formControlName="quantity" name="quantity" />
+        <button type="button" (click)="addIngredient()">
+          +
+        </button>
+
+        @if (i > 0) {
+          <button type="button" (click)="removeIngredient(i)">
+            -
+          </button>
+        }
+
+      </div>
+    }
   </div>
-  <button>Start</button>
+  <button type="button">Start</button>
 </form>
