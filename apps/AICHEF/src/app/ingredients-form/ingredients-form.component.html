@@ -1,19 +1,20 @@
 <h1>What do you have in your kitchen today ?</h1>
-<form [formGroup]="ingredientForm">
+<form [formGroup]="ingredientForm"
+      (ngSubmit)="onSubmit()">
   <div class="ingredients-wrapper" formArrayName="ingredients">
     @for (ingredient of ingredients.controls; track $index; let i = $index) {
       <div class="ingredient-wrapper" [formGroupName]="i">
         <mat-form-field>
           <mat-label>Ingredient</mat-label>
-        <input formControlName="ingredient" matInput
-               [matAutocomplete]="auto"/>
+          <input formControlName="ingredient" matInput
+                 [matAutocomplete]="auto" />
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete">
-        @for (filteredIngredient of filteredIngredients | async ; track filteredIngredient) {
-          <mat-option [value]="filteredIngredient">{{filteredIngredient}}</mat-option>
-        }
-      </mat-autocomplete>
-        <input formControlName="quantity" matInput  />
+          @for (filteredIngredient of createdFilters[i] | async; track filteredIngredient) {
+            <mat-option [value]="filteredIngredient">{{ filteredIngredient }}</mat-option>
+          }
+        </mat-autocomplete>
+        <input formControlName="quantity" matInput />
         <button type="button" (click)="addIngredient()">
           +
         </button>
@@ -27,7 +28,7 @@
       </div>
     }
   </div>
-  <button type="button">Start</button>
+  <button>Start</button>
 </form>
 
 
