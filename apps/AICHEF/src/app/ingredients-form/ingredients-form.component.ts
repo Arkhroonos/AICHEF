@@ -23,6 +23,11 @@ import {
   MatAutocompleteTrigger,
   MatOption
 } from '@angular/material/autocomplete';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatButton,
+  MatMiniFabButton
+} from '@angular/material/button';
 
 /**
  * 3rd-party Imports
@@ -32,7 +37,6 @@ import {
   Observable,
   startWith
 } from 'rxjs';
-
 
 @Component({
   standalone: true,
@@ -46,7 +50,10 @@ import {
     MatAutocompleteTrigger,
     MatFormField,
     MatLabel,
-    AsyncPipe
+    AsyncPipe,
+    MatIcon,
+    MatMiniFabButton,
+    MatButton
   ]
 })
 export class IngredientsFormComponent implements OnInit {
@@ -71,7 +78,6 @@ export class IngredientsFormComponent implements OnInit {
     )
   });
 
-
   protected availableIngredients = [
     'Apple',
     'Banana',
@@ -85,11 +91,9 @@ export class IngredientsFormComponent implements OnInit {
     return this.ingredientForm.get('ingredients') as FormArray;
   }
 
-
   ngOnInit() {
     this.createdFilters.push(this.createFilter(0));
   }
-
 
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();

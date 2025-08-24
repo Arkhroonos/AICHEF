@@ -14,21 +14,35 @@
             <mat-option [value]="filteredIngredient">{{ filteredIngredient }}</mat-option>
           }
         </mat-autocomplete>
+
+        <mat-form-field>
+          <mat-label>Quantity</mat-label>
         <input formControlName="quantity" matInput />
-        <button type="button" (click)="addIngredient()">
-          +
+        </mat-form-field>
+
+        <button matMiniFab
+                aria-label="Add ingredient form"
+                type="button"
+                (click)="addIngredient()"
+        >
+          <mat-icon>add</mat-icon>
         </button>
 
         @if (i > 0) {
-          <button type="button" (click)="removeIngredient(i)">
-            -
+          <button matMiniFab
+                  aria-label="Remove ingredient form"
+                  type="button"
+                  (click)="removeIngredient(i)"
+          >
+            <mat-icon>remove</mat-icon>
           </button>
         }
 
       </div>
     }
   </div>
-  <button>Start</button>
+
+  <button matButton="filled">Start</button>
 </form>
 
 
