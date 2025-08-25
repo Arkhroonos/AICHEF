@@ -38,6 +38,11 @@ import {
   startWith
 } from 'rxjs';
 
+/**
+ * Internal Imports
+ */
+import { RecipesService } from '../services/recipes.service';
+
 @Component({
   standalone: true,
   templateUrl: './ingredients-form.component.html',
@@ -60,6 +65,8 @@ export class IngredientsFormComponent implements OnInit {
   private readonly formBuilder: NonNullableFormBuilder = inject(
     NonNullableFormBuilder
   );
+
+  private readonly recipesService = inject(RecipesService);
 
   protected readonly ingredientForm = this.formBuilder.group({
     ingredients: this.formBuilder.array(
@@ -131,8 +138,14 @@ export class IngredientsFormComponent implements OnInit {
 
   protected onSubmit() {
     if (this.ingredientForm.valid) {
-      console.log(this.ingredientForm.value);
+      const ingredientsString: string = this.ingredientForm.value.ingredients!.reduce<string>(
+        (acc: string, ingredient: { ingredient?: string, quantity?: string }) => {
+          return acc + `${ingredient.ingredient}, ${ingredient.quantity}, `;
+        },
+        ''
+      );
+      //this.recipesService.getRecipes(ingredientsString).subscribe();
+      this.recipesService.requestRecipesAsSignal(ingredientsString);
     }
   }
-
 }
