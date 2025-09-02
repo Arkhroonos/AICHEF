@@ -4,7 +4,8 @@
 import {
   computed,
   inject,
-  Injectable
+  Injectable,
+  Signal
 } from '@angular/core';
 import {
   HttpClient,

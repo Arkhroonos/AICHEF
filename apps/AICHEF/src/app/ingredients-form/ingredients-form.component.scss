@@ -6,23 +6,24 @@
 }
 
 h1 {
-  background-color: yellowgreen;
   text-align: center;
 }
 
 form {
-  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 70%;
 
   .ingredients-wrapper {
-    background-color: black;
     padding: 0 400px;
 
     .ingredient-wrapper {
-      background-color: aqua;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 10px;
     }
   }
 

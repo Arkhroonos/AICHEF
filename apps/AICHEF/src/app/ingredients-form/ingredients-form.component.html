@@ -20,7 +20,7 @@
         <input formControlName="quantity" matInput />
         </mat-form-field>
 
-        <button matMiniFab
+        <button matButton="filled"
                 aria-label="Add ingredient form"
                 type="button"
                 (click)="addIngredient()"
@@ -29,7 +29,7 @@
         </button>
 
         @if (i > 0) {
-          <button matMiniFab
+          <button matButton="filled"
                   aria-label="Remove ingredient form"
                   type="button"
                   (click)="removeIngredient(i)"
