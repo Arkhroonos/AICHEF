@@ -58,7 +58,11 @@
           "buildTarget": "aichef:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "dependsOn": ["aichef-api:serve"],
+      "options": {
+        "proxyConfig": "apps/aichef/proxy.conf.json"
+      }
     },
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
