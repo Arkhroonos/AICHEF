@@ -1,7 +1,7 @@
 {
   "name": "aichef-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "/apps/aichef-api/src",
+  "sourceRoot": "apps/aichef-api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
