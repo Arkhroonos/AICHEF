@@ -1,50 +1,48 @@
 <h1>What do you have in your kitchen today ?</h1>
-<form [formGroup]="ingredientForm"
-      (ngSubmit)="onSubmit()">
+<form [formGroup]="ingredientForm" (ngSubmit)="onSubmit()">
   <div class="ingredients-wrapper" formArrayName="ingredients">
     @for (ingredient of ingredients.controls; track $index; let i = $index) {
-      <div class="ingredient-wrapper" [formGroupName]="i">
-        <mat-form-field>
-          <mat-label>Ingredient</mat-label>
-          <input formControlName="ingredient" matInput
-                 [matAutocomplete]="auto" />
-        </mat-form-field>
-        <mat-autocomplete #auto="matAutocomplete">
-          @for (filteredIngredient of createdFilters[i] | async; track filteredIngredient) {
-            <mat-option [value]="filteredIngredient">{{ filteredIngredient }}</mat-option>
-          }
-        </mat-autocomplete>
-
-        <mat-form-field>
-          <mat-label>Quantity</mat-label>
-        <input formControlName="quantity" matInput />
-        </mat-form-field>
-
-        <button matButton="filled"
-                aria-label="Add ingredient form"
-                type="button"
-                (click)="addIngredient()"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-
-        @if (i > 0) {
-          <button matButton="filled"
-                  aria-label="Remove ingredient form"
-                  type="button"
-                  (click)="removeIngredient(i)"
-          >
-            <mat-icon>remove</mat-icon>
-          </button>
+    <div class="ingredient-wrapper" [formGroupName]="i">
+      <mat-form-field>
+        <mat-label>Ingredient</mat-label>
+        <input formControlName="ingredient" matInput [matAutocomplete]="auto" />
+      </mat-form-field>
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (filteredIngredient of createdFilters[i] | async; track
+        filteredIngredient) {
+        <mat-option [value]="filteredIngredient">{{
+          filteredIngredient
+        }}</mat-option>
         }
+      </mat-autocomplete>
 
-      </div>
+      <mat-form-field>
+        <mat-label>Quantity</mat-label>
+        <input formControlName="quantity" matInput />
+      </mat-form-field>
+
+      <button
+        matButton="filled"
+        aria-label="Add ingredient form"
+        type="button"
+        (click)="addIngredient()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+
+      @if (i > 0) {
+      <button
+        matButton="filled"
+        aria-label="Remove ingredient form"
+        type="button"
+        (click)="removeIngredient(i)"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      }
+    </div>
     }
   </div>
 
   <button matButton="filled">Start</button>
 </form>
-
-
-
-

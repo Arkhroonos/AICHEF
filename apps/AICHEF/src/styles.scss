@@ -4,19 +4,21 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-@use '../../../aichef_theme'as aichef_theme;
-
+@use '../../../aichef_theme' as aichef_theme;
 
 :root {
-  @include mat.form-field-overrides((
-          disabled-input-text-placeholder-color: orange,
-          disabled-leading-icon-color: red,
-          container-height: auto,
-  ));
-  @include mat.autocomplete-overrides((
-          background-color: rgba(49, 255, 207, 0.45),
-
-  ));
+  @include mat.form-field-overrides(
+    (
+      disabled-input-text-placeholder-color: orange,
+      disabled-leading-icon-color: red,
+      container-height: auto,
+    )
+  );
+  @include mat.autocomplete-overrides(
+    (
+      background-color: rgba(49, 255, 207, 0.45),
+    )
+  );
 }
 
 html {
@@ -59,5 +61,3 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   padding: 16px 80px;
 }
-
-
