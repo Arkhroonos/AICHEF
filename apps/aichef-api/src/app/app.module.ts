@@ -1,10 +1,19 @@
+/**
+ * NestJS Imports
+ */
 import { Module } from '@nestjs/common';
+
+/**
+ * Internal Imports
+ */
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
-  imports: [],
+  imports: [RecipesModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
-export class AppModule {}
+export class AppModule {
+}

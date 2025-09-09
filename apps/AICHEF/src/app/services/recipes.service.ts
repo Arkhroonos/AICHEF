@@ -1,46 +1,48 @@
 /**
  * Angular Imports
  **/
-import { computed, inject, Injectable, Signal } from '@angular/core';
 import {
-  HttpClient,
+  computed,
+  Injectable,
+  signal,
+  Signal,
+  WritableSignal
+} from '@angular/core';
+import {
   httpResource,
-  HttpResourceRef,
+  HttpResourceRef
 } from '@angular/common/http';
-
-/**
- * 3rd-party Imports
- */
-import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RecipesService {
-  private readonly httpClient: HttpClient = inject(HttpClient);
 
   private _recipes?: string;
   get recipes() {
     return this._recipes;
   }
 
-  private _recipesResource?: HttpResourceRef<string | undefined>;
+  private _ingredients: WritableSignal<string | null> = signal(null);
+
+  private _recipesResource: HttpResourceRef<string | undefined> = httpResource<string>(() => {
+    const ingredients = this._ingredients();
+    if (ingredients === null) {
+      return undefined;
+    }
+
+    return {
+      url: '/api/recipes',
+      params: { ingredients }
+    };
+  });
+
   recipesAsSignal: Signal<string | undefined> = computed(() => {
-    return this._recipesResource?.hasValue()
+
+    return this._recipesResource.hasValue()
       ? this._recipesResource.value()
       : undefined;
   });
 
-  getRecipes(ingredientsString: string): Observable<string> {
-    return this.httpClient
-      .get<string>('/api/recipes', {
-        params: { ingredients: ingredientsString },
-      })
-      .pipe(tap((recipes) => (this._recipes = recipes)));
-  }
-
   requestRecipesAsSignal(ingredientsString: string): void {
-    this._recipesResource = httpResource<string>(() => ({
-      url: '/api/recipes',
-      params: { ingredients: ingredientsString },
-    }));
+    this._ingredients.set(ingredientsString);
   }
 }
