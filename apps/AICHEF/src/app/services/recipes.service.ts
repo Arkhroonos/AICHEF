@@ -15,12 +15,6 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class RecipesService {
-
-  private _recipes?: string;
-  get recipes() {
-    return this._recipes;
-  }
-
   private _ingredients: WritableSignal<string | null> = signal(null);
 
   private _recipesResource: HttpResourceRef<string | undefined> = httpResource<string>(() => {
@@ -36,7 +30,6 @@ export class RecipesService {
   });
 
   recipesAsSignal: Signal<string | undefined> = computed(() => {
-
     return this._recipesResource.hasValue()
       ? this._recipesResource.value()
       : undefined;
