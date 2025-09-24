@@ -18,7 +18,8 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/aichef/public"
+            "input": "apps/aichef/public",
+            "output": "/"
           }
         ],
         "styles": ["apps/aichef/src/styles.scss"]

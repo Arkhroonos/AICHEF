@@ -3,61 +3,118 @@
 // components according to the Material 3 design spec.
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
+
 @use '@angular/material' as mat;
-@use '../../../aichef_theme' as aichef_theme;
+@use './theme/aichef_theme.scss' as aichef;
+@use 'sass:map';
 
 :root {
-  @include mat.form-field-overrides(
-    (
-      disabled-input-text-placeholder-color: orange,
-      disabled-leading-icon-color: red,
-      container-height: auto,
-    )
-  );
-  @include mat.autocomplete-overrides(
-    (
-      background-color: rgba(49, 255, 207, 0.45),
-    )
-  );
+
+  --test-color: #{map.get(aichef.$palettes, secondary, 35)};
+/**
+ * Buttons Overrides
+ */
+  @include mat.button-overrides((
+          filled-container-color: map.get(aichef.$palettes, secondary, 35),
+          outlined-outline-color : 2px solid #000000,
+
+
+
+  ));
+
 }
+
+
 
 html {
-  @include mat.theme(
-    (
-      color: (
-        primary: aichef_theme.$primary-palette,
-        tertiary: aichef_theme.$tertiary-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
-}
+  //Thème clair par défaut
+  @include mat.theme((
+          color: (
+                  primary: aichef.$secondary-palette,
+                  tertiary: aichef.$tertiary-palette,
+          ),
+          typography: Roboto,
+          density: 0,
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light dark;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-}
-/* You can add global styles to this file, and also import other style files */
-
-html,
-body {
+  ));
+  background-color: map.get(aichef.$palettes, primary, 98);
+  color: map.get(aichef.$palettes, primary, 10);
   height: 100%;
+
+  .mat-mdc-autocomplete-panel {
+    --mat-autocomplete-background-color: #{map.get(aichef.$palettes, secondary, 35)};
+    color: #{map.get(aichef.$palettes,primary, 100)};
+    border-bottom: 2px solid #AAAAAA5E;
+    border-left: 2px solid #AAAAAA5E;
+    border-right: 2px solid #AAAAAA5E;
+  }
+
+
+
+  h1 {
+    color: #ffffff;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
+
+    border: 2px solid #AAAAAA5E;
+    border-radius: 2rem;
+    padding:0.5rem 1rem;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+    background-color: #{map.get(aichef.$palettes, secondary, 35)};
+    backdrop-filter: blur(10px);
+
+  }
 }
+
+// Thème sombre basé sur prefers-color-scheme
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mat.theme((
+            color: (
+                    primary: aichef.$secondary-palette,
+                    tertiary: aichef.$tertiary-palette,
+            ),
+            typography: Roboto,
+            density: 0,
+            theme-type: dark,
+    ));
+    background-color: map.get(aichef.$palettes, primary, 10);
+    color: map.get(aichef.$palettes, secondary, 98);
+
+    .mat-mdc-autocomplete-panel {
+      --mat-autocomplete-background-color: #{map.get(aichef.$palettes, secondary, 35)};
+      color: #{map.get(aichef.$palettes,primary, 100)};
+      border-bottom: 2px solid #AAAAAA5E;
+      border-left: 2px solid #AAAAAA5E;
+      border-right: 2px solid #AAAAAA5E;
+    }
+
+
+    h1 {
+      color: #ffffff;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 200;
+      font-family: 'Roboto', sans-serif;
+
+      border: 2px solid #AAAAAA5E;
+      border-radius: 2rem;
+      padding:0.5rem 1rem;
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+      background-color: #{map.get(aichef.$palettes, secondary, 20)};
+
+    }
+  }
+}
+
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
-  padding: 16px 80px;
+  padding: 1rem 5rem;
+  height: calc(100% - 2rem);
+
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 }
