@@ -18,7 +18,7 @@ export class RecipesService {
   constructor(private readonly llmService: LlmService) {
   }
 
-  getRecipes(ingredients: string): Promise<MessageContent> {
-    return this.llmService.getRecipes(ingredients);
+  async getRecipes(ingredients: string): Promise<{ recipes: MessageContent }> {
+    return { recipes: await this.llmService.getRecipes(ingredients) };
   }
 }

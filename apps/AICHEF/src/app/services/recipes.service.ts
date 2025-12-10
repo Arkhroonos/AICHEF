@@ -13,11 +13,16 @@ import {
   HttpResourceRef
 } from '@angular/common/http';
 
+/**
+ * Internal Imports
+ */
+import { RecipesResponse } from '../models/recipes';
+
 @Injectable({ providedIn: 'root' })
 export class RecipesService {
   private _ingredients: WritableSignal<string | null> = signal(null);
 
-  private _recipesResource: HttpResourceRef<string | undefined> = httpResource<string>(() => {
+  private _recipesResource: HttpResourceRef< RecipesResponse | undefined> = httpResource<RecipesResponse>(() => {
     const ingredients = this._ingredients();
     if (ingredients === null) {
       return undefined;
@@ -29,11 +34,9 @@ export class RecipesService {
     };
   });
 
-  recipesAsSignal: Signal<string | undefined> = computed(() => {
-    return this._recipesResource.hasValue()
-      ? this._recipesResource.value()
-      : undefined;
-  });
+  get recipesResource() {
+    return this._recipesResource;
+  }
 
   requestRecipesAsSignal(ingredientsString: string): void {
     this._ingredients.set(ingredientsString);

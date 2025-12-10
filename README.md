@@ -1,53 +1,268 @@
-# AICHEF
+# 🍳 AICHEF
+
+**AICHEF** est une application intelligente qui génère des recettes personnalisées à partir des ingrédients que vous avez sous la main. Powered by AI (Mistral AI via LangChain), l'application vous propose des recettes créatives et détaillées en quelques secondes.
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## 📋 Table des matières
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- [Fonctionnalités](#-fonctionnalités)
+- [Architecture](#-architecture)
+- [Technologies](#-technologies)
+- [Prérequis](#-prérequis)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Démarrage](#-démarrage)
+- [Développement](#-développement)
+- [Build](#-build)
+- [Tests](#-tests)
+- [Structure du projet](#-structure-du-projet)
 
-## Finish your CI setup
+## ✨ Fonctionnalités
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/HEcGNseW1v)
+- 🥗 **Génération de recettes IA** : Saisissez vos ingrédients et obtenez des suggestions de recettes
+- 📝 **Formulaire dynamique** : Ajoutez plusieurs ingrédients avec leurs quantités
+- 🎨 **Interface moderne** : UI élégante avec Angular Material
+- ⚡ **Temps réel** : Suggestions instantanées via API REST
+- 📊 **Détails complets** : Recevez les instructions, temps de préparation, bénéfices nutritionnels, etc.
+- 🔄 **Variations** : Découvrez des variations possibles pour chaque recette
 
+## 🏗️ Architecture
 
-## Run tasks
+Ce projet est un **monorepo Nx** contenant deux applications :
 
-To run the dev server for your app, use:
-
-```sh
-npx nx serve AICHEF
+```
+┌─────────────────┐         ┌──────────────────┐
+│   AICHEF UI     │────────▶│  AICHEF API      │
+│   (Angular 20)  │         │  (NestJS)        │
+└─────────────────┘         └──────────────────┘
+                                     │
+                                     ▼
+                            ┌──────────────────┐
+                            │   Mistral AI     │
+                            │   (LangChain)    │
+                            └──────────────────┘
 ```
 
-To create a production bundle:
+- **Frontend** : Application Angular standalone avec Material Design
+- **Backend** : API NestJS avec intégration LangChain
+- **IA** : Modèle Mistral AI Large pour la génération de recettes
 
-```sh
-npx nx build AICHEF
+## 🛠️ Technologies
+
+### Frontend (`apps/aichef`)
+- **Angular 20.1** - Framework JavaScript moderne
+- **Angular Material 20.1** - Composants UI
+- **RxJS 7.8** - Programmation réactive
+- **TypeScript** - Typage statique
+- **SCSS** - Styles avancés
+
+### Backend (`apps/aichef-api`)
+- **NestJS 11** - Framework Node.js progressif
+- **LangChain 0.3** - Framework d'orchestration IA
+- **Mistral AI** - Modèle de langage
+- **Redis 5.8** - Cache et gestion de sessions
+- **Express** - Serveur HTTP
+
+### Infrastructure
+- **Nx 21.3.11** - Build system et monorepo tools
+- **Jest** - Tests unitaires
+- **ESLint** - Linting
+- **Webpack** - Bundling
+
+## 📦 Prérequis
+
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- **Redis** (optionnel, pour la mise en cache)
+- **Clé API Mistral AI** (obligatoire)
+
+## 🚀 Installation
+
+1. **Cloner le repository**
+```bash
+git clone <repository-url>
+cd AICHEF
 ```
 
-To see all available targets to run for a project, run:
-
-```sh
-npx nx show project AICHEF
+2. **Installer les dépendances**
+```bash
+npm install
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## ⚙️ Configuration
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Configuration de l'API Mistral AI
 
-## Add new projects
+Créez un fichier `.env` à la racine du projet `apps/aichef-api` :
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+```bash
+MISTRAL_API_KEY=your_mistral_api_key_here
 ```
 
-To generate a new library, use:
+Pour obtenir une clé API :
+1. Créez un compte sur [Mistral AI](https://console.mistral.ai/)
+2. Générez une clé API dans votre dashboard
+3. Copiez la clé dans votre fichier `.env`
+
+### Configuration du proxy (optionnel)
+
+Le frontend utilise un proxy pour communiquer avec le backend. La configuration se trouve dans `apps/aichef/proxy.conf.json`.
+
+## 🎯 Démarrage
+
+### Démarrage rapide (dev)
+
+Lancez les deux applications simultanément :
+
+```bash
+# Terminal 1 - Backend
+npx nx serve aichef-api
+
+# Terminal 2 - Frontend
+npx nx serve aichef
+```
+
+L'application sera accessible sur :
+- **Frontend** : http://localhost:4200
+- **Backend** : http://localhost:3000
+
+### Démarrage individuel
+
+**Frontend uniquement** :
+```bash
+npx nx serve aichef
+```
+
+**Backend uniquement** :
+```bash
+npx nx serve aichef-api
+```
+
+## 👨‍💻 Développement
+
+### Commandes utiles
+
+**Visualiser le graphe de dépendances** :
+```bash
+npx nx graph
+```
+
+**Lancer les tests** :
+```bash
+# Tests du frontend
+npx nx test aichef
+
+# Tests du backend
+npx nx test aichef-api
+
+# Tous les tests
+npx nx run-many --target=test
+```
+
+**Linter** :
+```bash
+# Lint du frontend
+npx nx lint aichef
+
+# Lint du backend
+npx nx lint aichef-api
+
+# Tout linter
+npx nx run-many --target=lint
+```
+
+**Voir les détails d'un projet** :
+```bash
+npx nx show project aichef
+npx nx show project aichef-api
+```
+
+## 📦 Build
+
+### Build de production
+
+**Frontend** :
+```bash
+npx nx build aichef --configuration=production
+```
+Les fichiers de build seront dans `dist/apps/aichef/`
+
+**Backend** :
+```bash
+npx nx build aichef-api --node-env=production
+```
+Les fichiers de build seront dans `dist/apps/aichef-api/`
+
+**Build complet** :
+```bash
+npx nx run-many --target=build --configuration=production
+```
+
+## 🧪 Tests
+
+```bash
+# Tests unitaires
+npx nx test aichef
+npx nx test aichef-api
+
+# Tests avec couverture
+npx nx test aichef --coverage
+npx nx test aichef-api --coverage
+
+# Tests e2e (si configurés)
+npx nx e2e aichef-e2e
+```
+
+## 📁 Structure du projet
+
+```
+AICHEF/
+├── apps/
+│   ├── aichef/                    # Application Angular
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── ingredients-form/    # Formulaire d'ingrédients
+│   │   │   │   ├── recipes-display/    # Affichage des recettes
+│   │   │   │   ├── services/            # Services Angular
+│   │   │   │   └── models/              # Modèles TypeScript
+│   │   │   ├── theme/                   # Thème Material personnalisé
+│   │   │   └── index.html
+│   │   └── project.json
+│   │
+│   └── aichef-api/                # API NestJS
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── recipes/             # Module recettes
+│       │   │   └── shared/              # Services partagés (LLM)
+│       │   └── main.ts
+│       └── project.json
+│
+├── nx.json                        # Configuration Nx
+├── package.json                   # Dépendances
+├── tsconfig.base.json             # Config TypeScript globale
+└── README.md                      # Ce fichier
+```
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+
+## 📝 License
+
+MIT
+
+## 🔗 Ressources
+
+- [Documentation Nx](https://nx.dev)
+- [Documentation Angular](https://angular.dev)
+- [Documentation NestJS](https://nestjs.com)
+- [Documentation LangChain](https://js.langchain.com)
+- [Documentation Mistral AI](https://docs.mistral.ai)
+
+---
+
+**Made with ❤️ and AI**
 
 ```sh
 npx nx g @nx/angular:lib mylib

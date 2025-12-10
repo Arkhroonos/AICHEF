@@ -25,6 +25,7 @@ import {
 } from '@angular/material/autocomplete';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 /**
  * 3rd-party Imports
@@ -39,6 +40,7 @@ import {
  * Internal Imports
  */
 import { RecipesService } from '../services/recipes.service';
+
 
 @Component({
   standalone: true,
@@ -63,6 +65,8 @@ export class IngredientsFormComponent implements OnInit {
   );
 
   private readonly recipesService = inject(RecipesService);
+  private readonly router = inject(Router);
+
 
   protected readonly ingredientForm = this.formBuilder.group({
     ingredients: this.formBuilder.array([
@@ -83,7 +87,28 @@ export class IngredientsFormComponent implements OnInit {
     'Apple',
     'Banana',
     'Orange',
-    'Mango'
+    'Mango',
+    'chicken',
+    'beef',
+    'pasta',
+    'rice',
+    'sweet potatoes',
+    'onions',
+    'garlic',
+    'tomatoes',
+    'potatoes',
+    'carrots',
+    'lemon',
+    'lemon juice',
+    'water',
+    'salt',
+    'pepper',
+    'garlic powder',
+    'cinnamon',
+    'curry',
+    'coconut milk',
+
+
   ];
 
   protected createdFilters: Observable<string[]>[] = [];
@@ -135,7 +160,7 @@ export class IngredientsFormComponent implements OnInit {
     this.createdFilters.splice(index, 1);
   }
 
-  protected onSubmit() {
+  protected async onSubmit() {
     if (this.ingredientForm.valid) {
       const ingredientsString: string =
         this.ingredientForm.value.ingredients!.reduce<string>(
@@ -148,6 +173,7 @@ export class IngredientsFormComponent implements OnInit {
           ''
         );
       this.recipesService.requestRecipesAsSignal(ingredientsString);
+      await this.router.navigate(['recipes']);
     }
   }
 }

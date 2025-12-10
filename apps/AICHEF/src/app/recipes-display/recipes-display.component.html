@@ -1,0 +1,15 @@
+@if (recipesResource.hasValue()) {
+  <div class="header">
+    <h1>Hey ! Here is your recipe !</h1>
+  </div>
+  <div class="recipes-wrapper">
+    <div>{{ formattedRecipes() }}</div>
+  </div>
+} @else if (recipesResource.error()) {
+  <div>Could not load recipe</div>
+} @else if (recipesResource.isLoading()) {
+  <div class="loading-wrapper">
+    <iframe src="https://lottie.host/embed/c0d83f24-da95-412a-b6d7-72ae2d567471/DAopKNz7st.lottie"></iframe>
+    <div>Loading...</div>
+  </div>
+}
