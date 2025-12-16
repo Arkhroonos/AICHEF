@@ -171,7 +171,7 @@ export class IngredientsFormComponent implements OnInit {
             return acc + `${ingredient.ingredient}, ${ingredient.quantity}, `;
           },
           ''
-        );
+        );.
       this.recipesService.requestRecipesAsSignal(ingredientsString);
       await this.router.navigate(['recipes']);
     }

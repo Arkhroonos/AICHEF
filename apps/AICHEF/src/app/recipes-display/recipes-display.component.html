@@ -1,15 +1,97 @@
-@if (recipesResource.hasValue()) {
+@if (recipesResource.hasValue() && recipes()) {
   <div class="header">
-    <h1>Hey ! Here is your recipe !</h1>
+    <h1>Here are your recipes</h1>
   </div>
   <div class="recipes-wrapper">
-    <div>{{ formattedRecipes() }}</div>
+    @for (recipe of recipes(); track recipe.name) {
+      <div class="recipe-card">
+        <div class="recipe-header">
+          <h2>{{ recipe.name }}</h2>
+          <div class="recipe-meta">
+            <span class="badge"> {{ recipe.servings }} personnes</span>
+            <span class="badge">Prep Time: {{ recipe.prep_time }} min</span>
+            <span class="badge">Cooking Time: {{ recipe.cook_time }} min</span>
+            <span class="badge total-time">Total: {{ recipe.total_time }} min</span>
+          </div>
+        </div>
+
+        @if (recipe.image) {
+          <div class="recipe-image">
+            <img [src]="recipe.image" [alt]="recipe.name">
+          </div>
+        }
+
+        <div class="recipe-content">
+          <div class="recipe-section">
+            <h3>Ingrédients</h3>
+            <ul class="ingredients-list">
+              @for (ingredient of recipe.ingredients; track $index) {
+                <li>{{ ingredient }}</li>
+              }
+            </ul>
+          </div>
+
+          <div class="recipe-section">
+            <h3>Instructions</h3>
+            <ol class="instructions-list">
+              @for (instruction of recipe.instructions; track $index) {
+                <li>{{ instruction }}</li>
+              }
+            </ol>
+          </div>
+
+          @if (recipe.benefits && recipe.benefits.length > 0) {
+            <div class="recipe-section">
+              <h3>Bénéfices</h3>
+              <ul class="benefits-list">
+                @for (benefit of recipe.benefits; track $index) {
+                  <li>{{ benefit }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (recipe.variation) {
+            <div class="recipe-section variation">
+              <h3>Variations possibles</h3>
+              <p>Cette recette peut être adaptée selon vos préférences !</p>
+            </div>
+          }
+
+          @if (recipe.notes && recipe.notes.length > 0) {
+            <div class="recipe-section notes">
+              <h3>Notes</h3>
+
+
+                <p>{{ recipe.notes}}</p>
+
+
+            </div>
+          }
+
+          @if (recipe.video) {
+            <div class="recipe-section">
+              <h3>Vidéo</h3>
+              <a [href]="recipe.video" target="_blank" class="video-link">Voir la vidéo</a>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+} @else if (recipesResource.hasValue() && !recipes()) {
+  <div class="error-wrapper">
+    <h2>Erreur de chargement</h2>
+    <p>Impossible de parser les recettes. Veuillez réessayer.</p>
   </div>
 } @else if (recipesResource.error()) {
-  <div>Could not load recipe</div>
+  <div class="error-wrapper">
+    <h2>Erreur</h2>
+    <p>Impossible de charger les recettes. Veuillez réessayer.</p>
+  </div>
 } @else if (recipesResource.isLoading()) {
   <div class="loading-wrapper">
     <iframe src="https://lottie.host/embed/c0d83f24-da95-412a-b6d7-72ae2d567471/DAopKNz7st.lottie"></iframe>
-    <div>Loading...</div>
+    <div>Génération de vos recettes en cours...</div>
   </div>
 }

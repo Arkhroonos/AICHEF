@@ -2,10 +2,8 @@
  * Angular Imports
  **/
 import {
-  computed,
   Injectable,
   signal,
-  Signal,
   WritableSignal
 } from '@angular/core';
 import {
@@ -22,7 +20,7 @@ import { RecipesResponse } from '../models/recipes';
 export class RecipesService {
   private _ingredients: WritableSignal<string | null> = signal(null);
 
-  private _recipesResource: HttpResourceRef< RecipesResponse | undefined> = httpResource<RecipesResponse>(() => {
+  private _recipesResource: HttpResourceRef<RecipesResponse | undefined> = httpResource<RecipesResponse>(() => {
     const ingredients = this._ingredients();
     if (ingredients === null) {
       return undefined;

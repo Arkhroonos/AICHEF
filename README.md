@@ -13,8 +13,11 @@
 - [Installation](#-installation)
 - [Configuration](#-configuration)
 - [Démarrage](#-démarrage)
+- [Utilisation](#-utilisation)
 - [Développement](#-développement)
 - [Build](#-build)
+- [API Documentation](#-api-documentation)
+- [Dépannage](#-dépannage)
 - [Tests](#-tests)
 - [Structure du projet](#-structure-du-projet)
 
@@ -139,6 +142,47 @@ npx nx serve aichef
 npx nx serve aichef-api
 ```
 
+## 💡 Utilisation
+
+### Comment utiliser AICHEF ?
+
+1. **Accédez à l'application** : Ouvrez votre navigateur sur http://localhost:4200
+
+2. **Ajoutez vos ingrédients** :
+   - Cliquez sur le champ "Ingredient" pour saisir un ingrédient
+   - L'autocomplétion vous suggère des ingrédients courants
+   - Ajoutez la quantité dans le champ "Quantity"
+   - Cliquez sur le bouton `+` pour ajouter d'autres ingrédients
+   - Utilisez le bouton `-` pour supprimer un ingrédient
+
+3. **Générez des recettes** :
+   - Une fois vos ingrédients saisis, cliquez sur le bouton de soumission
+   - L'IA va analyser vos ingrédients et générer plusieurs recettes
+
+4. **Consultez les résultats** :
+   - Chaque recette affiche :
+     - Le nom de la recette
+     - La liste des ingrédients nécessaires
+     - Les instructions étape par étape
+     - Le temps de préparation et de cuisson
+     - Le nombre de portions
+     - Les bénéfices nutritionnels
+     - Des notes et astuces
+     - Des variations possibles
+
+### Exemple d'utilisation
+
+```
+Ingrédients entrés :
+- Poulet : 500g
+- Tomates : 3
+- Oignons : 2
+- Ail : 3 gousses
+
+Résultat : L'IA génère plusieurs recettes comme "Poulet basquaise", 
+"Poulet rôti aux tomates", "Tajine de poulet", etc.
+```
+
 ## 👨‍💻 Développement
 
 ### Commandes utiles
@@ -199,6 +243,73 @@ Les fichiers de build seront dans `dist/apps/aichef-api/`
 npx nx run-many --target=build --configuration=production
 ```
 
+## 🌐 API Documentation
+
+### Endpoints
+
+#### GET `/api/recipes`
+
+Génère des recettes basées sur les ingrédients fournis.
+
+**Paramètres de requête** :
+- `ingredients` (string, requis) : Liste des ingrédients séparés par des virgules
+
+**Exemple de requête** :
+```bash
+curl "http://localhost:3000/api/recipes?ingredients=poulet,tomates,oignons"
+```
+
+**Exemple de réponse** :
+```json
+{
+  "recipes": {
+    "recipes": [
+      {
+        "name": "Poulet basquaise",
+        "ingredients": ["500g de poulet", "3 tomates", "2 oignons"],
+        "instructions": ["Étape 1...", "Étape 2..."],
+        "servings": 4,
+        "prep_time": 15,
+        "cook_time": 30,
+        "total_time": 45,
+        "benefits": ["Riche en protéines", "Source de vitamine C"],
+        "variation": true,
+        "notes": ["Astuce 1...", "Astuce 2..."]
+      }
+    ]
+  }
+}
+```
+
+## 🐛 Dépannage
+
+### Problèmes courants
+
+**Erreur "Mistral API key not found"** :
+- Vérifiez que votre fichier `.env` est bien configuré dans `apps/aichef-api/`
+- Assurez-vous que la variable `MISTRAL_API_KEY` est correctement définie
+- Redémarrez le serveur backend après avoir ajouté la clé
+
+**Le frontend ne communique pas avec le backend** :
+- Vérifiez que les deux serveurs sont démarrés
+- Consultez le fichier `proxy.conf.json` pour la configuration du proxy
+- Vérifiez les CORS si vous avez modifié la configuration
+
+**Erreur lors de l'installation des dépendances** :
+```bash
+# Nettoyez le cache npm et réinstallez
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+**Les tests échouent** :
+```bash
+# Nettoyez le cache Nx et Jest
+npx nx reset
+npm run test -- --clearCache
+```
+
 ## 🧪 Tests
 
 ```bash
@@ -223,9 +334,17 @@ AICHEF/
 │   │   ├── src/
 │   │   │   ├── app/
 │   │   │   │   ├── ingredients-form/    # Formulaire d'ingrédients
+│   │   │   │   │   ├── ingredients-form.component.ts
+│   │   │   │   │   ├── ingredients-form.component.html
+│   │   │   │   │   └── ingredients-form.component.scss
 │   │   │   │   ├── recipes-display/    # Affichage des recettes
+│   │   │   │   │   ├── recipes-display.component.ts
+│   │   │   │   │   ├── recipes-display.component.html
+│   │   │   │   │   └── recipes-display.component.scss
 │   │   │   │   ├── services/            # Services Angular
+│   │   │   │   │   └── recipes.service.ts
 │   │   │   │   └── models/              # Modèles TypeScript
+│   │   │   │       └── recipes.ts
 │   │   │   ├── theme/                   # Thème Material personnalisé
 │   │   │   └── index.html
 │   │   └── project.json
@@ -234,7 +353,12 @@ AICHEF/
 │       ├── src/
 │       │   ├── app/
 │       │   │   ├── recipes/             # Module recettes
+│       │   │   │   ├── recipes.controller.ts
+│       │   │   │   ├── recipes.service.ts
+│       │   │   │   └── recipes.module.ts
 │       │   │   └── shared/              # Services partagés (LLM)
+│       │   │       ├── llm.service.ts
+│       │   │       └── shared.module.ts
 │       │   └── main.ts
 │       └── project.json
 │
@@ -244,9 +368,77 @@ AICHEF/
 └── README.md                      # Ce fichier
 ```
 
+### Composants clés
+
+#### `RecipesDisplayComponent`
+
+Le composant `recipes-display` est responsable de l'affichage des recettes générées par l'IA. Il utilise les fonctionnalités modernes d'Angular :
+
+- **Signals** : Pour la gestion réactive de l'état
+- **HTTP Resources** : Pour la gestion automatique du chargement des données
+- **Computed Signals** : Pour transformer les données de l'API en format utilisable
+- **Template Control Flow** : Avec la syntaxe `@if` et `@for` d'Angular 17+
+
+**Fonctionnalités** :
+- Parsing intelligent du JSON retourné par Mistral AI
+- Gestion des états de chargement, erreur et succès
+- Affichage responsive avec grille CSS
+- Animation de chargement avec Lottie
+- Support des images et vidéos (si fournies)
+- Mise en évidence des bénéfices nutritionnels et variations
+
+#### `IngredientsFormComponent`
+
+Formulaire réactif avec :
+- FormArray dynamique pour ajouter/supprimer des ingrédients
+- Autocomplétion des ingrédients
+- Validation des entrées
+- Navigation vers la page de résultats
+
+#### `RecipesService`
+
+Service de gestion des recettes utilisant :
+- `httpResource` pour les requêtes HTTP réactives
+- Signals pour la communication entre composants
+- Gestion automatique du cache et du rechargement
+
 ## 🤝 Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+
+### Comment contribuer ?
+
+1. Fork le projet
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Pushez vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 🗺️ Roadmap
+
+- [ ] Ajout d'un système de favoris pour sauvegarder les recettes
+- [ ] Génération d'images de recettes avec IA
+- [ ] Filtres par régime alimentaire (végétarien, vegan, sans gluten, etc.)
+- [ ] Historique des recherches
+- [ ] Export de recettes en PDF
+- [ ] Mode hors ligne avec cache local
+- [ ] Suggestions basées sur les saisons
+- [ ] Intégration avec des APIs de nutrition
+- [ ] Support multilingue
+
+## 📊 Performance
+
+- **Temps de réponse API** : ~2-5 secondes (dépend de Mistral AI)
+- **Build frontend** : ~30 secondes
+- **Build backend** : ~10 secondes
+- **Bundle size frontend** : Optimisé avec Angular build
+
+## 🔒 Sécurité
+
+- Les clés API sont stockées dans des variables d'environnement
+- Validation des entrées utilisateur
+- Sanitization des réponses de l'IA
+- CORS configuré pour la communication frontend-backend
 
 ## 📝 License
 
@@ -264,34 +456,3 @@ MIT
 
 **Made with ❤️ and AI**
 
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
